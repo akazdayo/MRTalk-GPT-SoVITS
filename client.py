@@ -1,35 +1,45 @@
 import requests
-import tempfile
-import os
 from fastapi import FastAPI, Form, UploadFile, Response
 
 app = FastAPI()
 
 
-@app.post("/tts")
-async def tts(file: UploadFile = Form(), transcript: str = Form(), text: str = Form()):
-    with tempfile.TemporaryFile(mode="wb", dir="Data/voice/Temp/", delete=False) as t:
-        f = await file.read()
-        t.write(f)
-        path = t.name
+@app.get("/tts")
+async def tts(id: str, text: str):
+    with open(
+        f"Data/voice/Temp/{id}.txt",
+    ) as f:
+        transcript = f.read()
 
-    try:
-        params = {
-            "text": text,
-            "text_lang": "ja",
-            "ref_audio_path": path,
-            "prompt_text": transcript,
-            "prompt_lang": "ja",
-            "media_type": "wav",
-            "streaming_mode": "false",
-        }
+        try:
+            params = {
+                "text": text,
+                "text_lang": "ja",
+                "ref_audio_path": f"Data/voice/Temp/{id}.wav",
+                "prompt_text": transcript,
+                "prompt_lang": "ja",
+                "media_type": "wav",
+                "streaming_mode": "false",
+            }
 
-        response = requests.get("http://127.0.0.1:9880/tts", params=params)
+            response = requests.get("http://127.0.0.1:9880/tts", params=params)
 
-        if response.status_code == 200:
-            return Response(content=response.content, media_type="audio/wav")
+            if response.status_code == 200:
+                return Response(content=response.content, media_type="audio/wav")
 
-        else:
+            else:
+                return {"message": "An error has occurred."}
+        except:
             return {"message": "An error has occurred."}
-    finally:
-        os.remove(path)
+
+
+@app.post("/register")
+async def register(
+    id: str = Form(), file: UploadFile = Form(), transcript: str = Form()
+):
+    with open(f"Data/voice/Temp/{id}.wav", mode="wb") as f:
+        bytes = await file.read()
+        f.write(bytes)
+
+    with open(f"Data/voice/Temp/{id}.txt", mode="wt") as f:
+        f.write(transcript)
