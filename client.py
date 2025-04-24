@@ -6,9 +6,7 @@ app = FastAPI()
 
 @app.get("/tts")
 async def tts(id: str, text: str):
-    with open(
-        f"Data/voice/Temp/{id}.txt",
-    ) as f:
+    with open(f"Data/voice/Temp/{id}.txt", encoding="utf-8") as f:
         transcript = f.read()
 
         try:
@@ -41,5 +39,5 @@ async def register(
         bytes = await file.read()
         f.write(bytes)
 
-    with open(f"Data/voice/Temp/{id}.txt", mode="wt") as f:
+    with open(f"Data/voice/Temp/{id}.txt", mode="wt", encoding="utf-8") as f:
         f.write(transcript)
