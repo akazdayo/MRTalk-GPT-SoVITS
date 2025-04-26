@@ -77,7 +77,7 @@ async def tts(id: str, text: str, current_user: User = Depends(get_current_user)
     if not voice.character:
         raise HTTPException(status_code=400, detail="Voice Not found")
 
-    if not voice.character.is_public and voice.character.postedBy != current_user.id:
+    if not voice.character.isPublic and voice.character.postedBy != current_user.id:
         raise HTTPException(status_code=400, detail="Voice Not found")
 
     base_path = f"Data/voice/Temp/{voice.character.postedBy}"
