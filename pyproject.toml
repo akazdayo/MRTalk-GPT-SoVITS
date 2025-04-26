@@ -29,6 +29,7 @@ dependencies = [
     "opencc==1.1.1 ; sys_platform == 'linux'",
     "opencc>=1.1.1 ; sys_platform != 'linux'",
     "peft>=0.15.2",
+    "prisma>=0.15.0",
     "psutil>=7.0.0",
     "pydantic<=2.10.6",
     "pyopenjtalk>=0.4.1",
