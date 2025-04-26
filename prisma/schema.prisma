@@ -22,6 +22,7 @@ model User {
   Character     Character[]
   Favorite      Favorite[]
   sessions      Session[]
+  Voice         Voice[]
 
   @@map("user")
 }
@@ -77,11 +78,12 @@ model Character {
   story       String
   postedBy    String
   model_url   String
+  is_public   Boolean    @default(false)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @default(now()) @updatedAt
-  is_public   Boolean
   user        User       @relation(fields: [postedBy], references: [id], onDelete: Cascade)
   Favorite    Favorite[]
+  Voice       Voice?
 
   @@map("character")
 }
@@ -97,6 +99,19 @@ model Favorite {
 
   @@unique([userId, characterId])
   @@map("favorite")
+}
+
+model Voice {
+  id          String    @id @default(uuid())
+  characterId String    @unique
+  userId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, characterId])
+  @@map("voice")
 }
 
 model store {
