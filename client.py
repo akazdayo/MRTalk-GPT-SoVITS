@@ -148,6 +148,7 @@ async def tts(id: str, text: str, current_user: User = Depends(get_current_user)
 
         response = requests.get("http://127.0.0.1:9880/tts", params=params)
         print(f"[DEBUG] Response status: {response.status_code}")
+        print(f"[DEBUG] Response content: {response.content}")
 
         if response.status_code == 200:
             print("[DEBUG] TTS request successful")
